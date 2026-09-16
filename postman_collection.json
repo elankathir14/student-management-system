@@ -1,0 +1,241 @@
+{
+  "info": {
+    "_postman_id": "8b91a27e-e5e7-4b71-9dfc-studentmgmt01",
+    "name": "Student Management System API",
+    "description": "Postman collection for testing the Student Management System Django REST Framework API.\nIncludes standard CRUD operations, query filters, and validation edge cases as requested by the College SOP.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Create Student (Success)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Rahul Kumar\",\n  \"register_number\": \"2026CS110\",\n  \"email\": \"rahul.kumar@college.edu\",\n  \"department\": \"Computer Science and Engineering\",\n  \"year\": \"3rd Year\",\n  \"phone\": \"9876543220\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", ""]
+        },
+        "description": "Expected Status: 201 Created\nCreates a new student record in the SQLite database."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Get All Students",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", ""]
+        },
+        "description": "Expected Status: 200 OK\nReturns list of all registered students."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Get Student by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/1/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", "1", ""]
+        },
+        "description": "Expected Status: 200 OK\nReturns the student record matching ID 1."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Update Student (Full Update - PUT)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Aarav Sharma Updated\",\n  \"register_number\": \"2026CS101\",\n  \"email\": \"aarav.updated@college.edu\",\n  \"department\": \"Computer Science and Engineering\",\n  \"year\": \"4th Year\",\n  \"phone\": \"9876543210\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/1/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", "1", ""]
+        },
+        "description": "Expected Status: 200 OK\nUpdates the student record with ID 1."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Delete Student",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/1/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", "1", ""]
+        },
+        "description": "Expected Status: 200 OK or 204 No Content\nDeletes the specified student from SQLite database."
+      },
+      "response": []
+    },
+    {
+      "name": "6. Invalid Student ID (404 Not Found)",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/99999/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", "99999", ""]
+        },
+        "description": "Expected Status: 404 Not Found\nTests error handling when requesting a student ID that does not exist."
+      },
+      "response": []
+    },
+    {
+      "name": "7. Duplicate Register Number (400 Bad Request)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Duplicate User\",\n  \"register_number\": \"2026IT102\",\n  \"email\": \"duplicate@college.edu\",\n  \"department\": \"Information Technology\",\n  \"year\": \"2nd Year\",\n  \"phone\": \"9876543299\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", ""]
+        },
+        "description": "Expected Status: 400 Bad Request\nTests unique constraint validation on register_number."
+      },
+      "response": []
+    },
+    {
+      "name": "8. Missing Required Field (400 Bad Request)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Incomplete Record\"\n}"
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "port": "8000",
+          "path": ["api", "students", ""]
+        },
+        "description": "Expected Status: 400 Bad Request\nTests required field validations."
+      },
+      "response": []
+    },
+    {
+      "name": "Bonus: Search by Name/Register Number",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/?search=Priya",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "path": ["api", "students", ""],
+          "query": [
+            {
+              "key": "search",
+              "value": "Priya"
+            }
+          ]
+        },
+        "description": "Expected Status: 200 OK\nReturns students matching search term."
+      },
+      "response": []
+    },
+    {
+      "name": "Bonus: Filter by Department",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/students/?department=Mechanical Engineering",
+          "protocol": "http",
+          "host": ["127", "0", "0", "1"],
+          "path": ["api", "students", ""],
+          "query": [
+            {
+              "key": "department",
+              "value": "Mechanical Engineering"
+            }
+          ]
+        },
+        "description": "Expected Status: 200 OK\nReturns students enrolled in Mechanical Engineering."
+      },
+      "response": []
+    }
+  ]
+}

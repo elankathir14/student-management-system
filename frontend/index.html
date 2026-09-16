@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management System | College Portal</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Google Fonts for clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Top Header -->
+    <header class="header">
+        <div class="header-container">
+            <div class="brand">
+                <div class="brand-icon">🎓</div>
+                <div>
+                    <h1 class="brand-title">Student Management System</h1>
+                    <p class="brand-subtitle">Department Academic Portal &bull; Full-Stack CRUD Application</p>
+                </div>
+            </div>
+            <div class="server-status" id="serverStatus">
+                <span class="status-dot status-unknown" id="statusDot"></span>
+                <span id="statusText">Connecting to API...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Global Alert / Toast Notification Container -->
+    <div class="alert-container" id="alertContainer" aria-live="polite"></div>
+
+    <!-- Main Content Area -->
+    <main class="main-container">
+        <!-- Student Registration / Edit Form Section -->
+        <section class="card form-card">
+            <div class="card-header">
+                <div>
+                    <h2 class="card-title" id="formTitle">
+                        <span id="formIcon">➕</span> Add New Student
+                    </h2>
+                    <p class="card-subtitle" id="formSubtitle">Enter the student's academic and contact credentials</p>
+                </div>
+                <div class="badge-edit-mode hidden" id="editBadge">Editing Mode</div>
+            </div>
+
+            <form id="studentForm" novalidate>
+                <!-- Hidden Student ID for Updates -->
+                <input type="hidden" id="studentId" value="">
+
+                <div class="form-grid">
+                    <!-- Student Full Name -->
+                    <div class="form-group">
+                        <label for="name" class="form-label">Full Name <span class="required">*</span></label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            class="form-input" 
+                            placeholder="e.g., Alex Johnson" 
+                            required 
+                            minlength="2" 
+                            maxlength="100"
+                            autocomplete="name"
+                        >
+                        <span class="field-error" id="nameError"></span>
+                    </div>
+
+                    <!-- Register Number -->
+                    <div class="form-group">
+                        <label for="registerNumber" class="form-label">Register Number <span class="required">*</span></label>
+                        <input 
+                            type="text" 
+                            id="registerNumber" 
+                            name="register_number" 
+                            class="form-input" 
+                            placeholder="e.g., 2026CS101" 
+                            required 
+                            maxlength="30"
+                            autocomplete="off"
+                        >
+                        <span class="field-error" id="registerNumberError"></span>
+                    </div>
+
+                    <!-- Email Address -->
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address <span class="required">*</span></label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="form-input" 
+                            placeholder="e.g., alex.j@college.edu" 
+                            required 
+                            maxlength="100"
+                            autocomplete="email"
+                        >
+                        <span class="field-error" id="emailError"></span>
+                    </div>
+
+                    <!-- Department Selection -->
+                    <div class="form-group">
+                        <label for="department" class="form-label">Department <span class="required">*</span></label>
+                        <select id="department" name="department" class="form-select" required>
+                            <option value="">-- Select Department --</option>
+                            <option value="Computer Science and Engineering">Computer Science and Engineering</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Electronics and Communication Engineering">Electronics and Communication Engineering</option>
+                            <option value="Electrical and Electronics Engineering">Electrical and Electronics Engineering</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Civil Engineering">Civil Engineering</option>
+                            <option value="Artificial Intelligence and Data Science">Artificial Intelligence and Data Science</option>
+                        </select>
+                        <span class="field-error" id="departmentError"></span>
+                    </div>
+
+                    <!-- Academic Year -->
+                    <div class="form-group">
+                        <label for="year" class="form-label">Academic Year <span class="required">*</span></label>
+                        <select id="year" name="year" class="form-select" required>
+                            <option value="">-- Select Year --</option>
+                            <option value="1st Year">1st Year (Freshman)</option>
+                            <option value="2nd Year">2nd Year (Sophomore)</option>
+                            <option value="3rd Year">3rd Year (Junior)</option>
+                            <option value="4th Year">4th Year (Senior)</option>
+                        </select>
+                        <span class="field-error" id="yearError"></span>
+                    </div>
+
+                    <!-- Phone Number -->
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number <span class="required">*</span></label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            class="form-input" 
+                            placeholder="10-digit number (e.g., 9876543210)" 
+                            required 
+                            maxlength="10"
+                            pattern="[0-9]{10}"
+                            autocomplete="tel"
+                        >
+                        <span class="field-error" id="phoneError"></span>
+                    </div>
+                </div>
+
+                <!-- Form Controls -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span class="btn-icon">💾</span> <span id="submitBtnText">Add Student</span>
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="resetBtn">
+                        <span class="btn-icon">🔄</span> Reset
+                    </button>
+                    <button type="button" class="btn btn-outline hidden" id="cancelEditBtn">
+                        <span class="btn-icon">✕</span> Cancel Edit
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Student Records Directory Section -->
+        <section class="card table-card">
+            <div class="card-header table-header-flex">
+                <div>
+                    <h2 class="card-title">📋 Student Directory</h2>
+                    <p class="card-subtitle">List of registered students with search, filtering, and real-time actions</p>
+                </div>
+                <div class="header-tools">
+                    <span class="student-count-badge" id="studentCountBadge">Total: 0 Students</span>
+                    <button class="btn btn-sm btn-secondary" id="refreshListBtn" title="Refresh Table">
+                        <span class="btn-icon">🔄</span> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter Bar -->
+            <div class="filter-bar">
+                <div class="search-box">
+                    <span class="search-icon">🔍</span>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="Search by name, register number, or email..."
+                        autocomplete="off"
+                    >
+                    <button type="button" class="clear-search-btn hidden" id="clearSearchBtn" title="Clear Search">✕</button>
+                </div>
+
+                <div class="filter-dropdown-box">
+                    <label for="deptFilter" class="filter-label">Filter Department:</label>
+                    <select id="deptFilter" class="filter-select">
+                        <option value="">All Departments</option>
+                        <option value="Computer Science and Engineering">Computer Science</option>
+                        <option value="Information Technology">Information Tech</option>
+                        <option value="Electronics and Communication Engineering">ECE</option>
+                        <option value="Electrical and Electronics Engineering">EEE</option>
+                        <option value="Mechanical Engineering">Mechanical</option>
+                        <option value="Civil Engineering">Civil</option>
+                        <option value="Artificial Intelligence and Data Science">AI & DS</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table Wrapper for Responsiveness -->
+            <div class="table-responsive">
+                <table class="data-table" id="studentsTable">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">ID</th>
+                            <th>Student Name</th>
+                            <th>Register No.</th>
+                            <th>Email</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>Phone</th>
+                            <th style="width: 150px; text-align: center;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="studentsTableBody">
+                        <!-- Dynamic Rows Injected by JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Loading Spinner State -->
+            <div class="loading-state hidden" id="loadingState">
+                <div class="spinner"></div>
+                <p>Fetching student records...</p>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="emptyState">
+                <div class="empty-icon">📂</div>
+                <h3 class="empty-title">No Students Found</h3>
+                <p class="empty-desc" id="emptyDesc">No student records match your query or none have been added yet.</p>
+                <button class="btn btn-sm btn-primary" id="emptyAddBtn">Add Your First Student</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal-overlay hidden" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Confirm Deletion</h3>
+                <button type="button" class="modal-close" id="modalCloseBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-alert-icon">⚠️</div>
+                <p>Are you sure you want to delete the student record for:</p>
+                <p class="modal-student-name" id="modalStudentName">Student Name</p>
+                <p class="modal-warning-note">This action will permanently remove the record from SQLite database.</p>
+            </div>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-secondary" id="modalCancelBtn">Cancel</button>
+                <button type="button" class="btn btn-danger" id="modalConfirmDeleteBtn">
+                    <span class="btn-icon">🗑️</span> Yes, Delete
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2026 Student Management System. Built with Django REST Framework &amp; Vanilla JavaScript.</p>
+            <p class="footer-subtext">Designed for College Academic Demonstrations &bull; SQLite Database</p>
+        </div>
+    </footer>
+
+    <!-- Main Application JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
